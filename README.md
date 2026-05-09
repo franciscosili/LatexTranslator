@@ -12,6 +12,12 @@ conda env create -f environment.yaml
 
 If not, you will find the dependencies in `requirements.txt`. This will install the `requests` and `deepl` python submodule, that will allow the translation.
 
+When you come back, activate the environment by doing
+
+```bash
+mamba activate translator
+```
+
 You will need to provide an API key, please place it in the `setup_deepl.sh` file
 
 ## Translation

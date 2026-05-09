@@ -9,10 +9,13 @@ regex_list = [
     re.compile(r'\\begin{equation}.*?\\end{equation}', re.DOTALL),      # equations
     re.compile(r'\\begin{align}.*?\\end{align}', re.DOTALL),            # equations
     re.compile(r'\\begin{equation\*}.*?\\end{equation\*}', re.DOTALL),  # equations
+    re.compile(r'\\begin{gather\}.*?\\end{gather\}', re.DOTALL),      # equations
+    re.compile(r'\\begin{gather\*}.*?\\end{gather\*}', re.DOTALL),      # equations
     re.compile(r'\\begin{table}.*?\\end{table}', re.DOTALL),            # tables
     re.compile(r'\\begin{tabular}.*?\\end{tabular}', re.DOTALL),        # tables
     re.compile(r'\\begin{float}.*?\\end{float}', re.DOTALL),            # floats
     re.compile(r'\\begin{tikz}.*?\\end{tikz}', re.DOTALL),              # tiks
+    re.compile(r'\\\[.*?\\\]'),                                         # equations with \[\]
     re.compile(r'\\\(.*?\\\)'),                                         # inline equations with \(\)
     re.compile(r'\$.*?\$'),                                             # inline equations with $$
     re.compile(r'\\[a-zA-Z]*?{.*?}'),                                   # commands in the form of \cmd{}
@@ -59,7 +62,7 @@ def read_file(filepath):
     return content
 
 def replace_with_numbering(match, number, content):    
-    placeholder = f'#{number}#'
+    placeholder = f'##{number}##'
 
     # Save the placeholder and original substring
     hash_dict = {
@@ -189,7 +192,7 @@ def main(filename: str, output: str, do_encode: bool, do_decode: bool, do_trans:
         output_filename: Path = Path(output)
         print(f'Output Filename = {output_filename}')
     else:
-        output_filename: Path = new_input_filename.parent / (new_input_filename.stem + '_translated')
+        output_filename: Path = new_input_filename.stem + '_translated'
         print(f'Output Filename = {output_filename}')
 
 

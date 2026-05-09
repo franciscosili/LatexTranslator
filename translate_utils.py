@@ -13,7 +13,8 @@ def initialize_translator():
 
 def translate_text(translator, text: str, source_lang: str = 'EN', target_lang: str = 'ES') -> str:
     # Translate text using DeepL API
-    result = translator.translate_text(text, source_lang=source_lang, target_lang=target_lang)
+    glossary_id = os.getenv('GLOSSARY_ONE')
+    result = translator.translate_text(text, source_lang=source_lang, target_lang=target_lang, glossary=glossary_id)
     return result.text
 
 
@@ -23,8 +24,13 @@ def translate(translator, latex_content: str, source_lang: str = 'EN', target_la
     parts: list[str] = re.split(r'(\n{2,})', latex_content)
     
     for i, part in enumerate(parts):
+
+        only_cmds = all(
+            l.strip().startswith('#') and not re.search('[a-zA-Z]', l)
+            for l in part.split('\n')
+        )
         
-        if part.strip() and not part.startswith('\n'):
+        if part.strip() and not part.startswith('\n') and not only_cmds:
             # If it's a paragraph (not just newlines), ask if it should be translated
             print('-'*100)
             print('-'*100)
@@ -37,6 +43,7 @@ def translate(translator, latex_content: str, source_lang: str = 'EN', target_la
             if do_full:
                 do_translate = True
             else:
+                # do_translate = True
                 do_translate = (input("\nDo you want to translate this paragraph? (y/n): ").strip().lower() == 'y')
             
             
